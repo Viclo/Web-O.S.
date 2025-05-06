@@ -1,0 +1,46 @@
+.home-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+.title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #1e3a8a;
+}
+
+.home-description p {
+    margin-bottom: 1rem;
+}
+
+.home-description strong {
+    font-weight: bold;
+}
+
+.home-description em {
+    font-style: italic;
+    color: #4b5563;
+}
+
+.instructions {
+    background-color: #f3f4f6;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    margin-bottom: 1rem;
+}
+
+.question {
+    font-size: 1.1rem;
+    color: #111827;
+}
+
+ul {
+    list-style-type: none;
+}
