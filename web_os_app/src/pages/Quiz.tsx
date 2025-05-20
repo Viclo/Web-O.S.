@@ -1,73 +1,111 @@
 import * as React from "react";
-import {useState} from "react";
-import MapaInteractivo from "../components/MapaInteractivo.tsx";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import MapaInteractivo from "../components/MapaInteractivo";
 import "./styles.css";
 
+type LocationState = { target?: string };
+
+type Pos = { x: number; y: number };
+
+const letterPositions: Record<string, Pos> = {
+  A: { x: 9, y: 4 },
+  B: { x: 4, y: 0 },
+  C: { x: 2, y: 2 },
+  D: { x: 0, y: 4 }
+};
+
 const Quiz: React.FC = () => {
-  const [posicion, setPosicion] = useState({ x: 0, y: 4 }); // Comienza en D
-  const [direccion, setDireccion] = useState(1); // Mirando a la derecha
+  const location = useLocation();
+  const navigate = useNavigate();
+  const state = location.state as LocationState;
+  const target = state?.target || null;
+
+  const [posicion, setPosicion] = useState<Pos>({ x: 0, y: 4 });
+  const [direccion, setDireccion] = useState(1);
   const [letraSeleccionada, setLetraSeleccionada] = useState<string | null>(null);
-  const [mensaje, setMensaje] = useState('Usa las flechas del teclado para mover a Tina');
+  const [mensaje, setMensaje] = useState('Usa las flechas para mover a Tina y sitúala en la letra que creas correcta');
+  const [guardado, setGuardado] = useState(false);
 
-  const handleMovimiento = (nuevaPos: any, nuevaDir: number) => {
-    setPosicion(nuevaPos);
-    setDireccion(nuevaDir);
+  // Movimiento con teclado
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        let nuevaPos = { ...posicion };
+        let nuevaDir = direccion;
+        switch(e.key) {
+          case 'ArrowUp': nuevaPos.y = Math.max(0, posicion.y - 1); nuevaDir = 0; break;
+          case 'ArrowRight': nuevaPos.x = Math.min(9, posicion.x + 1); nuevaDir = 1; break;
+          case 'ArrowDown': nuevaPos.y = Math.min(9, posicion.y + 1); nuevaDir = 2; break;
+          case 'ArrowLeft': nuevaPos.x = Math.max(0, posicion.x - 1); nuevaDir = 3; break;
+        }
+        setPosicion(nuevaPos);
+        setDireccion(nuevaDir);
+        setMensaje('');
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [posicion, direccion]);
 
-    // Verificar si llegó a una letra
-    const letras = ['A','B','C','D'];
-    if (letras.some(l => l === letraSeleccionada &&
-        nuevaPos.x === posicion.x && nuevaPos.y === posicion.y)) {
-      setMensaje(`¡Llegaste a la letra ${letraSeleccionada}!`);
+  const handleLetraClick = (letra: string) => {
+    if (guardado) return;
+    setLetraSeleccionada(letra);
+    setMensaje('');
+  };
+
+  const handleGuardar = () => {
+    if (guardado) return;
+    // primero, comprobar si está en una casilla de letra
+    const onLetterCell = Object.entries(letterPositions).find(
+      ([letra, pos]) => pos.x === posicion.x && pos.y === posicion.y
+    );
+    if (!onLetterCell) {
+      setMensaje('Tina no está en una casilla con letra. Muévela hasta una letra antes de guardar.');
+      return;
+    }
+    if (!letraSeleccionada) {
+      setMensaje('Selecciona una letra antes de guardar.');
+      return;
+    }
+    setGuardado(true);
+    // comparar con target
+    if (letraSeleccionada === target && letraSeleccionada === onLetterCell[0]) {
+      setMensaje(`¡Correcto! Llegaste a la letra ${target}.`);
+    } else {
+      setMensaje(`Incorrecto. La letra objetivo era ${target}, pero estás en ${onLetterCell[0]} y seleccionaste ${letraSeleccionada}.`);
     }
   };
 
   return (
-    <div>
-      <h1 className="title">Create tu propia pregunta.</h1>
-      <p>En esta sección puedes generar una pregunta de acuerdo a tus necesidades.</p>
-      <p>(Clic en la letra para seleccionarla y guardar!.)</p>
-
+    <div className="quiz-container">
+      <h1 className="title">¿A qué letra ha llegado Tina?</h1>
       <p className="mensaje-accion">{mensaje}</p>
-
-      <div className="controles-direccion">
-        <button onClick={() => handleMovimiento(
-          { x: posicion.x, y: Math.max(0, posicion.y - 1) }, 0)}>↑</button>
-        <div>
-          <button onClick={() => handleMovimiento(
-            { x: Math.max(0, posicion.x - 1), y: posicion.y }, 3)}>←</button>
-          <button onClick={() => handleMovimiento(
-            { x: Math.min(9, posicion.x + 1), y: posicion.y }, 1)}>→</button>
-        </div>
-        <button onClick={() => handleMovimiento(
-          { x: posicion.x, y: Math.min(9, posicion.y + 1) }, 2)}>↓</button>
-      </div>
 
       <MapaInteractivo
         posicion={posicion}
         direccion={direccion}
         letraSeleccionada={letraSeleccionada}
-        onMovimiento={handleMovimiento}
-        onLetraClick={setLetraSeleccionada}
+        onMovimiento={(pos, dir) => { setPosicion(pos); setDireccion(dir); setMensaje(''); }}
+        onLetraClick={handleLetraClick}
       />
 
       <div className="opciones-letras">
-        {['A', 'B', 'C', 'D'].map(letra => (
+        {['A','B','C','D'].map(letra => (
           <div
             key={letra}
             className={`opcion-letra ${letraSeleccionada === letra ? 'seleccionada' : ''}`}
-            onClick={() => setLetraSeleccionada(letra)}
-          >
-            {letra}
-          </div>
+            onClick={() => handleLetraClick(letra)}
+          >{letra}</div>
         ))}
       </div>
 
       <button
         className="boton-guardar"
-        disabled={!letraSeleccionada}
-      >
-        Guardar
-      </button>
+        onClick={handleGuardar}
+        disabled={guardado}
+      >Guardar</button>
     </div>
   );
 };
