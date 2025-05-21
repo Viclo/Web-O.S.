@@ -1,0 +1,120 @@
+.mapa-container {
+    display: inline-block;
+    border: 3px solid #5d4037;
+    background-color: #8bc34a; /* Color de césped */
+    margin: 20px auto;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .fila {
+    display: flex;
+  }
+  
+  .casilla {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #689f38;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  /* Estilo para caminos */
+  .casilla.camino {
+    background-color: #bdc3c7;
+    border: 1px solid #9e9e9e;
+  }
+  
+  /* Estilo para casillas con elementos */
+  .casilla.con-elemento {
+    background-color: #7cb342;
+  }
+  
+  /* Estilo para casillas con letras */
+  .casilla.con-letra {
+    background-color: #ffecb3;
+    border: 2px solid #ffa000;
+  }
+  
+  .casilla.activa {
+    box-shadow: inset 0 0 15px rgba(52, 152, 219, 0.6);
+    border: 2px solid #2980b9 !important;
+  }
+  
+  /* Estilos para elementos visuales */
+  .arbol {
+    width: 30px;
+    height: 40px;
+    background-color: #2e7d32;
+    position: relative;
+    border-radius: 5px;
+  }
+  
+  .arbol::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -10px;
+    width: 50px;
+    height: 25px;
+    background-color: #4caf50;
+    border-radius: 50%;
+  }
+  
+  .casa {
+    width: 30px;
+    height: 25px;
+    background-color: #795548;
+    position: relative;
+  }
+  
+  .casa::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -5px;
+    width: 40px;
+    height: 15px;
+    background-color: #d84315;
+    clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+  }
+  
+  .letra {
+    width: 30px;
+    height: 30px;
+    background-color: #ffc107;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #5d4037;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+  }
+  
+  .letra.seleccionada {
+    background-color: #ff9800;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #ff9800;
+  }
+  
+  .flecha {
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 20px solid #2c3e50;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+  }
