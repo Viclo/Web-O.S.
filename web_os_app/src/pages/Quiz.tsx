@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MapaInteractivo from "../components/MapaInteractivo";
-import "./styles.css";
+import "../styles/styles.css";
 
 type LocationState = { target?: string };
 

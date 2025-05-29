@@ -1,0 +1,137 @@
+/* src/styles/rescue.css */
+
+.rescue-container {
+  text-align: center;
+  padding: 2rem;
+  font-family: sans-serif;
+   background: linear-gradient(
+    to bottom,
+    #85d4ea 0%,     /* cielo claro */
+    #ffffff 60%     /* hasta el nivel del horizonte */
+  );
+  overflow: hidden;
+}
+
+.path {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  height: 200px;
+  margin: 1.5rem auto;
+  border: 2px dashed #ccc;
+  overflow: visible;
+  z-index: 1;
+
+  /* fondo con imagen */
+  background: url('../assets/fondo.png') center/cover no-repeat;
+}
+/* Perrito y serpiente dentro del recuadro */
+.dog {
+  position: absolute;
+  bottom: 10px;
+  width: 80px;
+  transition: left 0.5s ease-in-out;
+  transform: translateX(-50%);
+}
+.snake {
+  position: absolute;
+  bottom: 10px;
+  width: 80px;
+  transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Casa fija al final del recuadro */
+.house {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 125px;        /* ajusta aquí al tamaño que quieras */
+  animation: none !important; /* fuerza que no tenga animación */
+}
+
+/* Pregunta y botones */
+.question {
+  margin-bottom: 1rem;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.options button {
+  background-color: #38bdf8;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.options button:hover {
+  background-color: #0ea5e9;
+}
+
+/* Botones deshabilitados */
+.options button:disabled {
+  background-color: #94a3b8; /* gris claro */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Mensajes y resultados */
+.message {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background-color: #e0f2fe; /* azul claro */
+  border-radius: 0.375rem;
+  display: inline-block;
+}
+
+.result {
+  margin-top: 2rem;
+}
+
+/* Imagen final: perrito en casa */
+.house-with-dog {
+  display: block;
+  margin: 1rem auto;
+  width: 150px;       /* ajusta al tamaño que quieras para el final */
+}
+
+/* Mensaje animado de victoria */
+.result .message {
+  color: #22c55e;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  animation: victory 1s ease-in-out infinite;
+}
+
+/* Animación serpiente atacando */
+.snake-attack {
+  width: 110px;
+  display: block;
+  margin: 1rem auto;
+  animation: shake 0.5s ease-in-out 3;
+}
+
+@keyframes victory {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}

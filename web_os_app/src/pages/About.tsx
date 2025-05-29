@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./styles.css";
+import "../styles/styles.css";
 
 const About: React.FC = () => {
   return (

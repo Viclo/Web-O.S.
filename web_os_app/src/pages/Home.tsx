@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // si usas React Router
-import "./styles.css";
+import "../styles/styles.css";
 
 type LetterKey = "A" | "B" | "C" | "D";
 
