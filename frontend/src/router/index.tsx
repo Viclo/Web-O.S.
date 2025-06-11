@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "../pages/Home";
 import PlayGame from "../pages/PlayGame";
 import Quiz from "../pages/Quiz";
 import About from "../pages/About";
