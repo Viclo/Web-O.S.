@@ -14,7 +14,7 @@ interface MapaInteractivoProps {
   onLetraClick: (letra: string) => void;
 }
 
-const MapaInteractivo: React.FC<MapaInteractivoProps> = ({
+const MapGame: React.FC<MapaInteractivoProps> = ({
   posicion,
   direccion,
   letraSeleccionada,
@@ -49,7 +49,7 @@ const MapaInteractivo: React.FC<MapaInteractivoProps> = ({
         e.preventDefault();
         let nuevaPos = {...posicion};
         let nuevaDir = direccion;
-        
+
         switch(e.key) {
           case 'ArrowUp':
             nuevaPos.y = Math.max(0, posicion.y - 1);
@@ -89,7 +89,7 @@ const MapaInteractivo: React.FC<MapaInteractivoProps> = ({
             const letraObj = letras.find(l => l.x === x && l.y === y);
             const esCamino = celda === '▢';
             const esElemento = ['🌳','🏠'].includes(celda);
-            
+
             return (
               <div
                 key={x}
@@ -123,4 +123,4 @@ const MapaInteractivo: React.FC<MapaInteractivoProps> = ({
   );
 };
 
-export default MapaInteractivo;
+export default MapGame;
