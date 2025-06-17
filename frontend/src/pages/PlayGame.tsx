@@ -1,22 +1,73 @@
 import * as React from "react";
 import "./styles.css";
-import {useState} from "react";
+import { useState } from "react";
 import MapGame from "../components/MapGame.tsx";
+
+// Conjuntos de instrucciones para cada letra objetivo
+const instruccionesSets: Record<string, string[]> = {
+  A: [
+    "lawn, road, tree",
+    "road, lawn, road",
+    "lawn, road, house",
+    "tree, lawn, road",
+    "tree, road, house",
+    "road, road, lawn",
+    "lawn, lawn, road",
+    "tree, road, lawn",
+    "road, lawn, lawn",
+    "tree, road, lawn",
+    "lawn, road, road",
+    "lawn, road, house",
+    "tree, lawn, lawn",
+  ],
+  B: [
+    "road, road, lawn",
+    "road, tree, road",
+    "lawn, road, lawn",
+    "house, road, tree",
+    "road, road, tree",
+    "lawn, tree, road",
+    "road, lawn, house",
+    "tree, lawn, road",
+  ],
+  C: [
+    "tree, lawn, tree",
+    "lawn, road, road",
+    "tree, road, lawn",
+    "road, tree, road",
+    "house, road, lawn",
+  ],
+};
+const letrasOrden = ["A", "B", "C"];
 
 const PlayGame: React.FC = () => {
   const [posicion, setPosicion] = useState({ x: 0, y: 4 });
   const [direccion, setDireccion] = useState(1);
   const [letraSeleccionada, setLetraSeleccionada] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Letra objetivo e instrucciones dinámicas
+  const letraObjetivo = letrasOrden[currentIndex];
+  const instrucciones = instruccionesSets[letraObjetivo];
 
   const handleMovimiento = (nuevaPos: any, nuevaDir: number) => {
     setPosicion(nuevaPos);
     setDireccion(nuevaDir);
 
     const letras = ['A','B','C','D'];
-    if (letras.some(l => l === letraSeleccionada &&
-      nuevaPos.x === posicion.x && nuevaPos.y === posicion.y)) {
-      setMensaje(`¡Llegaste a la letra ${letraSeleccionada}!`);
+    if (
+      letraSeleccionada &&
+      letras.includes(letraSeleccionada) &&
+      nuevaPos.x === posicion.x &&
+      nuevaPos.y === posicion.y
+    ) {
+      alert(`¡Llegaste a la letra ${letraSeleccionada}!`);
     }
+  };
+
+  const handleCambiarInstruccion = () => {
+    setCurrentIndex((prev) => (prev + 1) % letrasOrden.length);
+    setLetraSeleccionada(null);
   };
 
   return (
@@ -29,22 +80,21 @@ const PlayGame: React.FC = () => {
           <strong> una casa, un árbol, una carretera y césped</strong>.
         </p>
         <p>
-          Cada vez que Tina entra en una nueva casilla de carretera, las gafas le indican —en este orden— qué hay a su izquierda, al frente y a su derecha.
-          Por ejemplo: <em>"árbol, carretera, casa"</em>.
+          Cada vez que Tina entra en una nueva casilla de carretera, las gafas le indican —en este orden—
+          qué hay a su izquierda, al frente y a su derecha. Por ejemplo: <em>"tree, row, "</em>.
         </p>
-        <p>
-          Tina comienza en la casilla marcada con una flecha, mirando en la dirección de la flecha, y escucha las siguientes indicaciones:
-        </p>
+       
         <ul className="instructions">
-          <li>tree, road, house</li>
-          <li>road, road, lawn</li>
-          <li>tree, road, tree</li>
-          <li>road, road, road</li>
-          <li>tree, road, tree</li>
-          <li>tree, house, road</li>
-          <li>road, road, tree</li>
-          <li>house, road, tree</li>
+          {instrucciones.map((instr, i) => (
+            <li key={i}>{instr}</li>
+          ))}
         </ul>
+        <button
+          className="boton-cambiar-instruccion"
+          onClick={handleCambiarInstruccion}
+        >
+          Cambiar instrucción
+        </button>
         <p className="question">
           <strong>Pregunta:</strong> ¿A qué letra ha llegado Tina en el mapa?
         </p>
@@ -61,17 +111,20 @@ const PlayGame: React.FC = () => {
 
         <div className="directions">
           <p>Usa las flechas del teclado para mover a Tina</p>
-
           <button onClick={() => handleMovimiento(
-            { x: posicion.x, y: Math.max(0, posicion.y - 1) }, 0)}>↑</button>
+            { x: posicion.x, y: Math.max(0, posicion.y - 1) }, 0
+          )}>↑</button>
           <div>
             <button onClick={() => handleMovimiento(
-              { x: Math.max(0, posicion.x - 1), y: posicion.y }, 3)}>←</button>
+              { x: Math.max(0, posicion.x - 1), y: posicion.y }, 3
+            )}>←</button>
             <button onClick={() => handleMovimiento(
-              { x: Math.min(9, posicion.x + 1), y: posicion.y }, 1)}>→</button>
+              { x: Math.min(9, posicion.x + 1), y: posicion.y }, 1
+            )}>→</button>
           </div>
           <button onClick={() => handleMovimiento(
-            { x: posicion.x, y: Math.min(9, posicion.y + 1) }, 2)}>↓</button>
+            { x: posicion.x, y: Math.min(9, posicion.y + 1) }, 2
+          )}>↓</button>
         </div>
       </div>
 
@@ -80,7 +133,7 @@ const PlayGame: React.FC = () => {
           (Haz clic en la letra que creas correcta. Presiona <em>'Guardar'</em> cuando hayas terminado).
         </p>
         <div className="opciones-letras">
-          {['A', 'B', 'C', 'D'].map(letra => (
+          {['A','B','C','D'].map((letra) => (
             <div
               key={letra}
               className={`opcion-letra ${letraSeleccionada === letra ? 'seleccionada' : ''}`}
@@ -100,6 +153,6 @@ const PlayGame: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default PlayGame;
